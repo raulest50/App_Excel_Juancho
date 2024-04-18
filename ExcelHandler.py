@@ -18,6 +18,15 @@ class ExcelHandler:
 
 
     def __init__(self, file_path, file_destino):
+
+        # index counter para cada una de las hojas destino y la fuente
+        start_dest_row = 1
+        self.n_mdh = start_dest_row
+        self.n_tin = start_dest_row
+        self.n_like = start_dest_row
+        self.n_alma = start_dest_row
+        self.n_orig = 4
+
         self.file_path = file_path
         self.file_destino = file_destino
         self.app = xw.App(visible=False)
@@ -66,9 +75,62 @@ class ExcelHandler:
         range.api.HorizontalAlignment = -4108  # -4108 is the code for center alignment
 
     def CopyRow(self, sheet, row_destino, row_origin):
-        sheet.range(f'A{row_destino}').row_height = 116
+        sheet.range(f'A{row_destino}').row_height = self.row_height
         sheet.range(f'A{row_destino}').value = self.orig.range(f'A{row_origin}').value
         sheet.range(f'B{row_destino}:F{row_destino}').value = self.orig.range(f'C{row_origin}:{row_origin}').value
         sheet.range(f'G{row_destino}:I{row_destino}').value = self.orig.range(f'{row_origin}:X{row_origin}').value
         sheet.range(f'{row_destino}').value = self.orig.range(f'{row_origin}').value
         sheet.range(f'{row_destino}:L{row_destino}').value = self.orig.range(f'{row_origin}:{row_origin}').value
+
+
+    def DoRow(self, value, row_origin):
+        match value:
+            case "mdh":
+                self.CopyRow(self.mdh, row_destino=self.n_mdh, row_origin=row_origin)
+                self.n_mdh = self.n_mdh + 1
+            case "tin":
+                self.CopyRow(self.tin, row_destino=self.n_tin, row_origin=row_origin)
+                self.n_tin = self.n_tin + 1
+            case "like":
+                self.CopyRow(self.like, row_destino=self.n_like, row_origin=row_origin)
+                self.n_like = self.n_like + 1
+            case "alma":
+                self.CopyRow(self.alma, row_destino=self.n_alma, row_origin=row_origin)
+                self.n_alma = self.n_alma + 1
+
+
+    def ProcesarWorkBook(self):
+
+        finished = False
+        while not finished:
+            c = self.orig.range(f'B{self.n_orig}')  #  celda que indica bodega corresponde el row
+            v = c.value
+            if v is None:  # Si llega a una celda vacia llego al fin de los datos
+                finished = True
+
+            elif c.api.MergeCells:  # if merged cells
+                ma = c.merge_area.value
+                nma = len(ma)
+                v = [it for it in ma if it is not None][0]
+                for k in range(self.n_orig, self.n_orig + nma):
+                    self.DoRow(value=v, row_origin=k)
+                to = self.n_orig + nma - 1
+                self.MergeBodegaColumn(value=v, fro=self.n_orig, to=to)
+                self.n_orig = self.n_orig + nma
+
+            elif not c.api.MergeCells: # si es una sola celda
+                self.DoRow()
+                n = n + 1
+
+
+    def MergeBodegaColumn(self, value, fro, to):
+        match value:
+            case "mdh":
+                range_2_merge = self.mdh.range(f'E{fro}:E{to}')
+            case "tin":
+                range_2_merge = self.tin.range(f'E{fro}:E{to}')
+            case "like":
+                range_2_merge = self.like.range(f'E{fro}:E{to}')
+            case "alma":
+                range_2_merge = self.alma.range(f'E{fro}:E{to}')
+        self.merge_center(range=range_2_merge)
