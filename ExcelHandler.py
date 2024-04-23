@@ -44,26 +44,26 @@ class ExcelHandler:
         self.like = self.wb.sheets.add(name="LIKE")
         self.alma = self.wb.sheets.add(name="ALMA BEAUTY")
 
+        self.setup_sheets()
+
 
     # para cada hoja se ajustan anchos de columna y se ponen los titulos
     def setup_sheets(self):
         for sheet in [self.mdh, self.tin, self.like, self.alma]:
-            sheet.range('C:G').column_width = self.col_width
+            sheet.range('B:F').column_width = self.col_width
             self.set_col_names(sheet)
-            sheet.range()
 
 
     def set_col_names(self, sheet):
         sheet.range('A1').value = self.orig.range(self.cel_marca_orig).value
         sheet.range('B1:F1').value = self.orig.range(self.cel_fotos_orig).value
-        sheet.range('G1:I1').value = self.orig.range(self.cells_ccp_orig).value
+        sheet.range('G1:J1').value = self.orig.range(self.cells_ccp_orig).value
+        self.merge_center(sheet.range('H1:I1'))
 
-        self.merge_center(sheet.range(self.cols_cantidad_destino)) ## se jutan V y W en el titulo solamente
-
-        sheet.range('J1').value = self.orig.range('AD3').value
-        sheet.range('K1:L1').value = self.orig.range('AI3:AJ3').value
-        sheet.range('L1').value = 'Costo'
-        sheet.range('M1').value = 'Sugerido'
+        sheet.range('K1').value = self.orig.range('AD3').value
+        sheet.range('L1:M1').value = self.orig.range('AI3:AJ3').value
+        sheet.range('N1').value = 'Costo'
+        sheet.range('O1').value = 'Sugerido'
 
     def save_and_close(self):
         self.wb.save(self.file_destino)
@@ -87,20 +87,19 @@ class ExcelHandler:
         match value:
             case "mdh":
                 self.CopyRow(self.mdh, row_destino=self.n_mdh, row_origin=row_origin)
-                self.n_mdh = self.n_mdh + 1
+                self.n_mdh = self.n_mdh + 1 # siempre se avanza 1
             case "tin":
                 self.CopyRow(self.tin, row_destino=self.n_tin, row_origin=row_origin)
-                self.n_tin = self.n_tin + 1
+                self.n_tin = self.n_tin + 1 # si se invoca dede el elif del merge
             case "like":
                 self.CopyRow(self.like, row_destino=self.n_like, row_origin=row_origin)
-                self.n_like = self.n_like + 1
+                self.n_like = self.n_like + 1 # se incrementa nma veces +1
             case "alma":
                 self.CopyRow(self.alma, row_destino=self.n_alma, row_origin=row_origin)
                 self.n_alma = self.n_alma + 1
 
 
     def ProcesarWorkBook(self):
-
         finished = False
         while not finished:
             c = self.orig.range(f'B{self.n_orig}')  #  celda que indica bodega corresponde el row
@@ -116,21 +115,34 @@ class ExcelHandler:
                     self.DoRow(value=v, row_origin=k)
                 to = self.n_orig + nma - 1
                 self.MergeBodegaColumn(value=v, fro=self.n_orig, to=to)
-                self.n_orig = self.n_orig + nma
+                self.n_orig = self.n_orig + nma  # se avanza por todas las celdas que estan en el merge
 
             elif not c.api.MergeCells: # si es una sola celda
-                self.DoRow()
-                n = n + 1
+                self.DoRow(value=v, row_origin=self.n_orig)
+                self.n_orig = self.n_orig + 1  # se avanza solo una celda
+        self.save_and_close()
 
 
     def MergeBodegaColumn(self, value, fro, to):
         match value:
             case "mdh":
                 range_2_merge = self.mdh.range(f'E{fro}:E{to}')
+                self.merge_center(range=range_2_merge)
             case "tin":
                 range_2_merge = self.tin.range(f'E{fro}:E{to}')
+                self.merge_center(range=range_2_merge)
             case "like":
                 range_2_merge = self.like.range(f'E{fro}:E{to}')
+                self.merge_center(range=range_2_merge)
             case "alma":
                 range_2_merge = self.alma.range(f'E{fro}:E{to}')
-        self.merge_center(range=range_2_merge)
+                self.merge_center(range=range_2_merge)
+
+
+
+eh = ExcelHandler('mkup_excel.xlsx', 'mod.xlsx')
+#eh.mdh.range('A2:A4').value = 10
+#print(eh.orig.range('H4:H5').value)
+eh.save_and_close()
+
+
