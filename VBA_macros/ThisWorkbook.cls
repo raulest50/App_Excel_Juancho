@@ -71,7 +71,38 @@ Sub Main()
         
             If nc > 1 Then ' si las celdas son merged
             
+            Dim i As Integer
+            ' Loop from n to n + nc
+                For i = n To n + nc
+                    Select Case bodega_name ' Copy Rows Case
+                    Case "MDH"
+                        Call CopiarRecord(hoja_main, hoja_mdh, i, m)
+                        m = m + 1
+                    Case "TIN"
+                        Call CopiarRecord(hoja_main, hoja_tin, i, t)
+                        t = t + 1
+                    Case "LIKE"
+                        Call CopiarRecord(hoja_main, hoja_like, i, l)
+                        l = l + 1
+                    Case "ALMA BEAUTY"
+                        Call CopiarRecord(hoja_main, hoja_alma, i, a)
+                        a = a + 1
+                    End Select
+                Next i
+                
+                Select Case bodega_name ' MergeCase Cells
+                    Case "MDH"
+                        Call MergeCellsInColumnA(m - nc - 1, m - 2, hoja_mdh)
+                    Case "TIN"
+                        Call MergeCellsInColumnA(t - nc - 1, t - 2, hoja_tin)
+                    Case "LIKE"
+                        Call MergeCellsInColumnA(l - nc - 1, l - 2, hoja_like)
+                    Case "ALMA BEAUTY"
+                        Call MergeCellsInColumnA(a - nc - 1, a - 2, hoja_alma)
+                    End Select
+                    
                 n = n + nc
+                
             Else ' si es una sola celda
                 
                 Select Case bodega_name ' LCase to make it case insensitive

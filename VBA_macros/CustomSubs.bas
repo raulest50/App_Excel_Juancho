@@ -249,7 +249,7 @@ Sub CopiarRecord(hoja_main As Worksheet, dst_sheet As Worksheet, row_orig As Int
 End Sub
 
 
-
+' al final parece que es mejor no usar esta funcion
 Function GenerateR1C1ProductFormula(startRow As Integer, startCol As Integer, endRow As Integer, endCol As Integer) As String
     ' This function generates an R1C1 notation string for the product of values in two specified cells.
     
@@ -270,4 +270,17 @@ Function GenerateR1C1ProductFormula(startRow As Integer, startCol As Integer, en
 End Function
 
 
+
+Sub MergeCellsInColumnA(startRow As Integer, endRow As Integer, ws As Worksheet)
+    ' Check if the startRow is less than or equal to endRow
+    If startRow <= endRow Then
+        ' Specify the range to merge in column A (column 1) from startRow to endRow
+        With ws
+            .Range(.Cells(startRow, 1), .Cells(endRow, 1)).Merge
+        End With
+    Else
+        ' Display a message box if startRow is greater than endRow
+        MsgBox "The start row must be less than or equal to the end row.", vbExclamation
+    End If
+End Sub
 
