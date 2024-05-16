@@ -1,5 +1,183 @@
 
+# Ignore Visual Studio temporary files, build results, and
+# user-specific files
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Mono Auto Generated Files
+mono_crash.*
+
+# Windows image file caches
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code directories
+.vscode/
+
+# JetBrains Rider
+.idea/
+
+# Rider projects
+.idea/*
+.idea_modules/
+
+# Avalonia compiled styles and resources
+*.g.i.cs
+*.g.cs
+*.css.l.css
+*.css.l.*.baml
+
+# Avalonia log files
+Avalonia.log
+
+# Visual Studio Code workspace files
+*.code-workspace
+
+# macOS system files
+.DS_Store
+
+# Windows system files
+desktop.ini
+$RECYCLE.BIN/
+
+# Backup files
+*.bak
+*.swp
+
+# Resharper
+_ReSharper*/
+
+# Rider
+.idea/
+
+# DotNet
+project.lock.json
+project.fragment.lock.json
+
+# Windows image file caches
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Folder config file
+Desktop.ini
+
+# VS Code directories
+.vscode/
+
+# Rider project files
+.idea/
+
+# Rider modules
+.idea_modules/
+
+# Crash reports
+crash-reports/
+
+# Avalonia compiled styles and resources
+*.g.i.cs
+*.g.cs
+*.css.l.css
+*.css.l.*.baml
+
+# Avalonia log files
+Avalonia.log
+
+# Packages directory can be restored
+**/packages/
+**/node_modules/
+
+# NuGet
+*.nupkg
+# Include only if needed otherwise should be restored
+!nuget.config
+!*.snk
+
+# Paket
+.paket/
+paket-files/
+
+# Windows specific files
+*.manifest
+*.appx
+*.appxsym
+*.appxupload
+*.appinstaller
+*.bundle
+*.blockmap
+*.signature.p7x
+
+# Others
+backup/
+!*.nuget/
+# Rider project files
+.idea/
+.idea_modules/
+.idea.webModules/
+.idea.run.xml
+
+# NuGet packages
+*.nupkg
+*.snupkg
+
+# Test Results
+TestResult*
+
+# Windows specific files
+*.manifest
+*.appx
+*.appxsym
+*.appxupload
+*.appinstaller
+*.bundle
+*.blockmap
+*.signature.p7x
+
+# Others
+backup/
+!*.nuget/
+
+
+
+#----------------------
+# Backup files
 mkup_excel.xlsx
 mkup_excel_backup.xlsx
-*xlsx
-*xlsm
+*.xlsx
+*.xlsm
+
+# Ignore Visual Studio folder
+.vs/
+
+# Rider project files and pycharm
+.idea/
+
+
