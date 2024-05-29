@@ -5,9 +5,55 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ModExcelApp.MainWindow"
         Title="ModExcelApp">
-	<StackPanel Margin="20">
-		<TextBlock Text=" % MDF" Margin="0,0,0,10"/>
-	    <TextBox x:Name="pMDF" Width="200" Margin="0,0,0,10"/>
-		<Button Content="Start" Width="100" Click="OnStart_ButtonStart"/>
+	
+	<StackPanel Margin="20" Background="Coral" Orientation="Vertical">
+		
+		<StackPanel>
+			<Border Margin="5" CornerRadius="10" Background="LightBlue">
+				<TextBlock Margin="5" FontSize="24" HorizontalAlignment="Center"
+							Text="App Excel Modfier" />
+			</Border>
+		</StackPanel>
+
+
+		<Grid Margin="5" >
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="50*"/>
+				<ColumnDefinition Width="50*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="100*"/>
+			</Grid.RowDefinitions>
+
+			<StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="0" Background="LightGreen" Margin="5">
+				<StackPanel Orientation="Horizontal" Margin="5">
+					<Label Content="Columna CTNS        " />
+					<TextBox x:Name="tb_col_ctns" Width="80"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal" Margin="5">
+					<Label Content="Columna CANTIDAD" />
+					<TextBox x:Name="tb_col_cantidad" Width="80"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal" Margin="5">
+					<Label Content="Col. PRECIO(RMB)/UND" />
+					<TextBox x:Name="tb_col_precio_rmb" Width="80"/>
+				</StackPanel>
+				
+				
+				<Border Height="1" Background="Black" HorizontalAlignment="Stretch"/>
+				<Label Content="Columna TOTAL RMB" />
+			</StackPanel>
+
+			<StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="0" Background="Azure" Margin="5">
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Background="BlanchedAlmond">
+					<Label Content="cto MDH"/>
+					<TextBox x:Name="tb_cto_mdh" Width="120"/>
+				</StackPanel>
+			</StackPanel>
+			
+		</Grid>
+		<StackPanel HorizontalAlignment="Stretch" Background="Aqua">
+			<Button Content="Start" Width="100" Click="OnStart_ButtonStart" HorizontalAlignment="Center"/>
+		</StackPanel>
 	</StackPanel>
 </Window>
