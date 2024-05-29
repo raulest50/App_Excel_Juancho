@@ -2,17 +2,25 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="550"
         x:Class="ModExcelApp.MainWindow"
         Title="ModExcelApp">
 	
-	<StackPanel Margin="20" Background="Coral" Orientation="Vertical">
+	<StackPanel Margin="20" Orientation="Vertical">
 		
 		<StackPanel>
 			<Border Margin="5" CornerRadius="10" Background="LightBlue">
 				<TextBlock Margin="5" FontSize="24" HorizontalAlignment="Center"
 							Text="App Excel Modfier" />
 			</Border>
+		</StackPanel>
+
+		<StackPanel>
+			<StackPanel Orientation="Horizontal" Margin="5">
+				<Label Content="Ruta Archivo Excel" Margin="5"/>
+				<TextBox x:Name="file_path" Margin="5" Width="200"/>
+				<Button Content="Browse" Margin="5"/>
+			</StackPanel>
 		</StackPanel>
 
 
@@ -25,7 +33,24 @@
 				<RowDefinition Height="100*"/>
 			</Grid.RowDefinitions>
 
-			<StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="0" Background="LightGreen" Margin="5">
+			<StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="0" Background="AliceBlue" Margin="5">
+
+				<StackPanel Orientation="Horizontal" Margin="5">
+					<Label Content="Marca" />
+					<TextBox x:Name="tb_col_marca" Width="80"/>
+				</StackPanel>
+
+				<Border Height="1" Background="Black" HorizontalAlignment="Stretch" Margin="5"/>
+				
+					<StackPanel Orientation="Horizontal" Margin="5">
+						<Label Content="Col. Fotos" />
+						<TextBox x:Name="tb_col_foto_i" Width="80"/>
+						<Label Content=" - " />
+						<TextBox x:Name="tb_col_foto_e" Width="80"/>
+					</StackPanel>
+				
+				<Border Height="1" Background="Black" HorizontalAlignment="Stretch" Margin="5"/>
+
 				<StackPanel Orientation="Horizontal" Margin="5">
 					<Label Content="Columna CTNS        " />
 					<TextBox x:Name="tb_col_ctns" Width="80"/>
@@ -40,19 +65,53 @@
 				</StackPanel>
 				
 				
-				<Border Height="1" Background="Black" HorizontalAlignment="Stretch"/>
-				<Label Content="Columna TOTAL RMB" />
+				<Border Height="1" Background="Black" HorizontalAlignment="Stretch" Margin="5"/>
+				
+				<StackPanel Orientation="Horizontal" Margin="5">
+					<Label Content="Columna TOTAL RMB" />
+					<TextBox x:Name="tb_col_total_rmb" Width="80"/>
+				</StackPanel>
+
+				<Border Height="1" Background="Black" HorizontalAlignment="Stretch" Margin="5"/>
+
+				<StackPanel Orientation="Horizontal" Margin="5">
+					<Label Content="Columna CBM/CAJA" />
+					<TextBox x:Name="tb_cbm_caja" Width="80"/>
+				</StackPanel>
+
+				<StackPanel Orientation="Horizontal" Margin="5">
+					<Label Content="Columna CBM/TOTAL" />
+					<TextBox x:Name="tb_col_cbm_total" Width="80"/>
+				</StackPanel>
+				
 			</StackPanel>
 
-			<StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="0" Background="Azure" Margin="5">
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Background="BlanchedAlmond">
+			<StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="0" Background="AliceBlue" Margin="5">
+				
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="5">
 					<Label Content="cto MDH"/>
 					<TextBox x:Name="tb_cto_mdh" Width="120"/>
 				</StackPanel>
+
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch"  Margin="5">
+					<Label Content="cto TIN"/>
+					<TextBox x:Name="tb_cto_tin" Width="120"/>
+				</StackPanel>
+
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="5">
+					<Label Content="cto LIKE"/>
+					<TextBox x:Name="tb_cto_like" Width="120"/>
+				</StackPanel>
+
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="5">
+					<Label Content="cto ALMA"/>
+					<TextBox x:Name="tb_cto_alma" Width="120"/>
+				</StackPanel>
+				
 			</StackPanel>
 			
 		</Grid>
-		<StackPanel HorizontalAlignment="Stretch" Background="Aqua">
+		<StackPanel HorizontalAlignment="Stretch">
 			<Button Content="Start" Width="100" Click="OnStart_ButtonStart" HorizontalAlignment="Center"/>
 		</StackPanel>
 	</StackPanel>

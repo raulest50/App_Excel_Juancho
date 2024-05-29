@@ -12,10 +12,10 @@ namespace ModExcelApp
 
         private async void OnStart_ButtonStart(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            var vp_mdf = pMDF.Text;
+            //var vp_mdf = pMDF.Text;
 
-            var dialog = new ModalDialog();
-            await dialog.ShowDialog(this);
+            //var dialog = new ModalDialog();
+            //await dialog.ShowDialog(this);
 
         }
 
