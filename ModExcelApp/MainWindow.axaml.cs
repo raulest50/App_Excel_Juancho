@@ -2,8 +2,14 @@ using Avalonia.Controls;
 using OfficeOpenXml;
 using System.IO;
 using System.Linq;
+using ModExcelApp;
 
 using System.Threading.Tasks;
+using Avalonia.Controls.Notifications;
+using System;
+using Avalonia.Threading;
+using OfficeOpenXml.Style;
+using System.Drawing;
 
 namespace ModExcelApp
 {
@@ -31,11 +37,13 @@ namespace ModExcelApp
 
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             InitializeComponent();
             InitDefaultAllTextBoxes();
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
         }
 
         private async void HandlerStart(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -60,20 +68,134 @@ namespace ModExcelApp
         // funcion principal
         public async Task ProcesarExcel( string file_path)
         {
-            using (var package = new ExcelPackage(new FileInfo(file_path)))
+            try
             {
-                ExcelWorkbook wb = package.Workbook;
-                DeleteAllExceptDespacho(wb);
+                using (var package = new ExcelPackage(new FileInfo(file_path)))
+                {
+                    
+                    ExcelWorkbook wb = package.Workbook;
+                    Rutinas.DeleteAllExceptDespacho(wb);
 
-                ExcelWorksheet mdh, tin, like, alma;
+                    ExcelWorksheet mdh, tin, like, alma;
 
-                mdh = CreateSheetIfNotExist(wb, "MDH");
-                tin = CreateSheetIfNotExist(wb, "TIN");
-                like = CreateSheetIfNotExist(wb, "LIKE");
-                alma = CreateSheetIfNotExist(wb, "ALMA");
+                    mdh = Rutinas.CreateSheetIfNotExist(wb, "MDH");
+                    tin = Rutinas.CreateSheetIfNotExist(wb, "TIN");
+                    like = Rutinas.CreateSheetIfNotExist(wb, "LIKE");
+                    alma = Rutinas.CreateSheetIfNotExist(wb, "ALMA");
 
-                // Save the changes to the file
-                await Task.Run(() => package.Save());
+                    ExcelWorksheet hojaMain = wb.Worksheets["Despacho"];
+                    Rutinas.SetupColTitles(hojaMain, mdh);
+                    Rutinas.SetupColTitles(hojaMain, tin);
+                    Rutinas.SetupColTitles(hojaMain, like);
+                    Rutinas.SetupColTitles(hojaMain, alma);
+
+
+
+
+                    bool not_finished = true;
+
+                    // indices para cada hoja
+                    int n = 4;
+                    int m = 2;
+                    int t = 2;
+                    int l = 2;
+                    int a = 2;
+
+                    int nc;
+
+                    while (not_finished)
+                    {
+                        if (IsEmpty(hojaMain.Cells[n, 1].Value))
+                        {
+                            not_finished = false;
+                        }
+                        else // si la celda no esta vacia
+                        {
+                            string bodega_name = hojaMain.Cells[n, 1].Value.ToString();
+
+                            nc = CountMergedCells(hojaMain, n, 1);
+
+                            if (nc > 1) // si las celdas son merged
+                            {
+                                for (int i = n; i < n + nc; i++)
+                                {
+                                    switch (bodega_name)
+                                    {
+                                        case "MDH":
+                                            CopiarRecord(hojaMain, mdh, i, m);
+                                            m++;
+                                            break;
+                                        case "TIN":
+                                            CopiarRecord(hojaMain, tin, i, t);
+                                            t++;
+                                            break;
+                                        case "LIKE":
+                                            CopiarRecord(hojaMain, like, i, l);
+                                            l++;
+                                            break;
+                                        case "ALMA BEAUTY":
+                                            CopiarRecord(hojaMain, alma, i, a);
+                                            a++;
+                                            break;
+                                    }
+                                }
+
+                                switch (bodega_name)
+                                {
+                                    case "MDH":
+                                        MergeCellsInColumnA(m - nc - 1, m - 2, mdh);
+                                        break;
+                                    case "TIN":
+                                        MergeCellsInColumnA(t - nc - 1, t - 2, tin);
+                                        break;
+                                    case "LIKE":
+                                        MergeCellsInColumnA(l - nc - 1, l - 2, like);
+                                        break;
+                                    case "ALMA BEAUTY":
+                                        MergeCellsInColumnA(a - nc - 1, a - 2, alma);
+                                        break;
+                                }
+
+                                n += nc;
+                            }
+                            else // si es una sola celda
+                            {
+                                switch (bodega_name.ToUpper())
+                                {
+                                    case "MDH":
+                                        CopiarRecord(hojaMain, mdh, n, m);
+                                        m++;
+                                        break;
+                                    case "TIN":
+                                        CopiarRecord(hojaMain, tin, n, t);
+                                        t++;
+                                        break;
+                                    case "LIKE":
+                                        CopiarRecord(hojaMain, like, n, l);
+                                        l++;
+                                        break;
+                                    case "ALMA BEAUTY":
+                                        CopiarRecord(hojaMain, alma, n, a);
+                                        a++;
+                                        break;
+                                }
+
+                                n++;
+                            }
+                        }
+                    }
+
+
+
+
+
+
+                    // Save the changes to the file
+                    await Task.Run(() => package.Save());
+                }
+            } catch (Exception ex)
+            {
+                
             }
 
         }
@@ -101,50 +223,6 @@ namespace ModExcelApp
             return cto_col*2*cto;
         }
 
-        public ExcelWorkbook LoadWorkbook(string filePath)
-        {
-            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
-            {
-                // Handle error: file path is invalid or file does not exist
-                return null;
-            }
-
-            var package = new ExcelPackage(new FileInfo(filePath));
-            return package.Workbook;
-        }
-
-
-        public static void DeleteAllExceptDespacho(ExcelWorkbook workbook)
-        {
-            // Disable display alerts
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-            // Collect all sheets except the one named "Despacho"
-            var sheetsToDelete = workbook.Worksheets
-                .Where(sheet => sheet.Name != "Despacho")
-                .ToList();
-
-            // Delete collected sheets
-            foreach (var sheet in sheetsToDelete)
-            {
-                workbook.Worksheets.Delete(sheet);
-            }
-        }
-        
-        public static ExcelWorksheet CreateSheetIfNotExist(ExcelWorkbook workbook, string sheetName)
-        {
-            // Check if the sheet already exists
-            var existingSheet = workbook.Worksheets.FirstOrDefault(ws => ws.Name == sheetName);
-            if (existingSheet != null)
-            {
-                return existingSheet;
-            }
-
-            // If the sheet does not exist, create it
-            var newSheet = workbook.Worksheets.Add(sheetName);
-            return newSheet;
-        }
-
         private void InitDefaultAllTextBoxes()
         {
             tb_col_marca.Text = "A";
@@ -161,8 +239,6 @@ namespace ModExcelApp
             //tb_cto_like.Text = "";
             //tb_cto_alma.Text = "";
         }
-
-
 
     }
 }
