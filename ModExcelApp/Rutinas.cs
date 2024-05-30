@@ -120,70 +120,74 @@ namespace ModExcelApp
             targetCell.Style.HorizontalAlignment = sourceCell.Style.HorizontalAlignment;
             targetCell.Style.VerticalAlignment = sourceCell.Style.VerticalAlignment;
         }
-    }
 
 
-    public void CopiarRecord(ExcelWorksheet hoja_main, ExcelWorksheet dst_sheet, int row_orig, int row_dst)
-    {
-        // Set row height
-        dst_sheet.Row(row_dst).Height = 116;
 
-        // Copy marca
-        CopyCell(hoja_main, dst_sheet, row_orig, 1, row_dst, 1);
-
-        // Copy fotos
-        CopyCell(hoja_main, dst_sheet, row_orig, 3, row_dst, 2); // foto1
-        CopyCell(hoja_main, dst_sheet, row_orig, 4, row_dst, 3);
-        CopyCell(hoja_main, dst_sheet, row_orig, 5, row_dst, 4);
-        CopyCell(hoja_main, dst_sheet, row_orig, 6, row_dst, 5);
-        CopyCell(hoja_main, dst_sheet, row_orig, 7, row_dst, 6); // foto5
-
-        // Copy CTNS
-        CopyCell(hoja_main, dst_sheet, row_orig, 21, row_dst, 7);
-
-        // Copy Cantidad 1 (formula)
-        CopyCell(hoja_main, dst_sheet, row_orig, 22, row_dst, 8);
-        dst_sheet.Cells[row_dst, 8].Value = hoja_main.Cells[row_orig, 22].Value;
-
-        // Copy Cantidad 2
-        CopyCell(hoja_main, dst_sheet, row_orig, 23, row_dst, 9);
-
-        // Copy Precio RMB
-        CopyCell(hoja_main, dst_sheet, row_orig, 24, row_dst, 10);
-
-        // Copy Total RMB (formula)
-        CopyCell(hoja_main, dst_sheet, row_orig, 30, row_dst, 11);
-        dst_sheet.Cells[row_dst, 11].Value = hoja_main.Cells[row_orig, 30].Value;
-
-        // Copy CBM Caja
-        CopyCell(hoja_main, dst_sheet, row_orig, 35, row_dst, 12);
-
-        // Copy CBM total (formula)
-        CopyCell(hoja_main, dst_sheet, row_orig, 36, row_dst, 13);
-        dst_sheet.Cells[row_dst, 13].Value = hoja_main.Cells[row_orig, 36].Value;
-    }
-
-    public void CopyCell(ExcelWorksheet srcSheet, ExcelWorksheet dstSheet, int srcRow, int srcCol, int dstRow, int dstCol)
-    {
-        var srcCell = srcSheet.Cells[srcRow, srcCol];
-        var dstCell = dstSheet.Cells[dstRow, dstCol];
-
-        dstCell.Value = srcCell.Value;
-        dstCell.StyleID = srcCell.StyleID;
-
-        if (srcCell.IsRichText)
+        public static void CopiarRecord(ExcelWorksheet hoja_main, ExcelWorksheet dst_sheet, int row_orig, int row_dst)
         {
-            foreach (var rt in srcCell.RichText)
+            // Set row height
+            dst_sheet.Row(row_dst).Height = 116;
+
+            // Copy marca
+            CopyCell(hoja_main, dst_sheet, row_orig, 1, row_dst, 1);
+
+            // Copy fotos
+            CopyCell(hoja_main, dst_sheet, row_orig, 3, row_dst, 2); // foto1
+            CopyCell(hoja_main, dst_sheet, row_orig, 4, row_dst, 3);
+            CopyCell(hoja_main, dst_sheet, row_orig, 5, row_dst, 4);
+            CopyCell(hoja_main, dst_sheet, row_orig, 6, row_dst, 5);
+            CopyCell(hoja_main, dst_sheet, row_orig, 7, row_dst, 6); // foto5
+
+            // Copy CTNS
+            CopyCell(hoja_main, dst_sheet, row_orig, 21, row_dst, 7);
+
+            // Copy Cantidad 1 (formula)
+            CopyCell(hoja_main, dst_sheet, row_orig, 22, row_dst, 8);
+            dst_sheet.Cells[row_dst, 8].Value = hoja_main.Cells[row_orig, 22].Value;
+
+            // Copy Cantidad 2
+            CopyCell(hoja_main, dst_sheet, row_orig, 23, row_dst, 9);
+
+            // Copy Precio RMB
+            CopyCell(hoja_main, dst_sheet, row_orig, 24, row_dst, 10);
+
+            // Copy Total RMB (formula)
+            CopyCell(hoja_main, dst_sheet, row_orig, 30, row_dst, 11);
+            dst_sheet.Cells[row_dst, 11].Value = hoja_main.Cells[row_orig, 30].Value;
+
+            // Copy CBM Caja
+            CopyCell(hoja_main, dst_sheet, row_orig, 35, row_dst, 12);
+
+            // Copy CBM total (formula)
+            CopyCell(hoja_main, dst_sheet, row_orig, 36, row_dst, 13);
+            dst_sheet.Cells[row_dst, 13].Value = hoja_main.Cells[row_orig, 36].Value;
+        }
+
+        public static void CopyCell(ExcelWorksheet srcSheet, ExcelWorksheet dstSheet, int srcRow, int srcCol, int dstRow, int dstCol)
+        {
+            var srcCell = srcSheet.Cells[srcRow, srcCol];
+            var dstCell = dstSheet.Cells[dstRow, dstCol];
+
+            dstCell.Value = srcCell.Value;
+            dstCell.StyleID = srcCell.StyleID;
+
+            if (srcCell.IsRichText)
             {
-                dstCell.RichText.Add(rt.Text);
-                dstCell.RichText[dstCell.RichText.Count - 1].Bold = rt.Bold;
-                dstCell.RichText[dstCell.RichText.Count - 1].Italic = rt.Italic;
-                dstCell.RichText[dstCell.RichText.Count - 1].Color = rt.Color;
-                dstCell.RichText[dstCell.RichText.Count - 1].FontName = rt.FontName;
-                dstCell.RichText[dstCell.RichText.Count - 1].Size = rt.Size;
-                dstCell.RichText[dstCell.RichText.Count - 1].Underline = rt.Underline;
+                foreach (var rt in srcCell.RichText)
+                {
+                    dstCell.RichText.Add(rt.Text);
+                    dstCell.RichText[dstCell.RichText.Count - 1].Bold = rt.Bold;
+                    dstCell.RichText[dstCell.RichText.Count - 1].Italic = rt.Italic;
+                    dstCell.RichText[dstCell.RichText.Count - 1].Color = rt.Color;
+                    dstCell.RichText[dstCell.RichText.Count - 1].FontName = rt.FontName;
+                    dstCell.RichText[dstCell.RichText.Count - 1].Size = rt.Size;
+                    dstCell.RichText[dstCell.RichText.Count - 1].Underline = rt.Underline;
+                }
             }
         }
+
+
+
     }
 
 
