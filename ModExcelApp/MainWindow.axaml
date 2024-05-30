@@ -18,11 +18,11 @@
 		<StackPanel>
 			<StackPanel Orientation="Horizontal" Margin="5">
 				<Label Content="Ruta Archivo Excel" Margin="5"/>
-				<TextBox x:Name="file_path" Margin="5" Width="200"/>
-				<Button Content="Browse" Margin="5"/>
+				<TextBox x:Name="tb_file_path" Margin="5" Width="700"/>
+				<Button Content="Browse" Margin="5" Click="HandlerBrowse"   />
 			</StackPanel>
 		</StackPanel>
-
+		
 
 		<Grid Margin="5" >
 			<Grid.ColumnDefinitions>
@@ -112,7 +112,7 @@
 			
 		</Grid>
 		<StackPanel HorizontalAlignment="Stretch">
-			<Button Content="Start" Width="100" Click="OnStart_ButtonStart" HorizontalAlignment="Center"/>
+			<Button Content="Start" Width="100" HorizontalAlignment="Center" Click="HandlerStart" />
 		</StackPanel>
 	</StackPanel>
 </Window>
