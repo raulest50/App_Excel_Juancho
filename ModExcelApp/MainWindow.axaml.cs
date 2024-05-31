@@ -91,7 +91,7 @@ namespace ModExcelApp
 
 
 
-
+                    
                     bool not_finished = true;
 
                     // indices para cada hoja
@@ -102,10 +102,13 @@ namespace ModExcelApp
                     int a = 2;
 
                     int nc;
+                    
 
+
+                    
                     while (not_finished)
                     {
-                        if (IsEmpty(hojaMain.Cells[n, 1].Value))
+                        if (Rutinas.IsCellEmpty(hojaMain.Cells[n, 1]))
                         {
                             not_finished = false;
                         }
@@ -113,7 +116,7 @@ namespace ModExcelApp
                         {
                             string bodega_name = hojaMain.Cells[n, 1].Value.ToString();
 
-                            nc = CountMergedCells(hojaMain, n, 1);
+                            nc = Rutinas.CountMergedCells(hojaMain, n, 1);
 
                             if (nc > 1) // si las celdas son merged
                             {
@@ -122,19 +125,19 @@ namespace ModExcelApp
                                     switch (bodega_name)
                                     {
                                         case "MDH":
-                                            CopiarRecord(hojaMain, mdh, i, m);
+                                            Rutinas.CopiarRecord(hojaMain, mdh, i, m);
                                             m++;
                                             break;
                                         case "TIN":
-                                            CopiarRecord(hojaMain, tin, i, t);
+                                            Rutinas.CopiarRecord(hojaMain, tin, i, t);
                                             t++;
                                             break;
                                         case "LIKE":
-                                            CopiarRecord(hojaMain, like, i, l);
+                                            Rutinas.CopiarRecord(hojaMain, like, i, l);
                                             l++;
                                             break;
                                         case "ALMA BEAUTY":
-                                            CopiarRecord(hojaMain, alma, i, a);
+                                            Rutinas.CopiarRecord(hojaMain, alma, i, a);
                                             a++;
                                             break;
                                     }
@@ -143,16 +146,16 @@ namespace ModExcelApp
                                 switch (bodega_name)
                                 {
                                     case "MDH":
-                                        MergeCellsInColumnA(m - nc - 1, m - 2, mdh);
+                                        Rutinas.MergeCellsInColumnA(m - nc - 1, m - 2, mdh);
                                         break;
                                     case "TIN":
-                                        MergeCellsInColumnA(t - nc - 1, t - 2, tin);
+                                        Rutinas.MergeCellsInColumnA(t - nc - 1, t - 2, tin);
                                         break;
                                     case "LIKE":
-                                        MergeCellsInColumnA(l - nc - 1, l - 2, like);
+                                        Rutinas.MergeCellsInColumnA(l - nc - 1, l - 2, like);
                                         break;
                                     case "ALMA BEAUTY":
-                                        MergeCellsInColumnA(a - nc - 1, a - 2, alma);
+                                        Rutinas.MergeCellsInColumnA(a - nc - 1, a - 2, alma);
                                         break;
                                 }
 
@@ -163,19 +166,19 @@ namespace ModExcelApp
                                 switch (bodega_name.ToUpper())
                                 {
                                     case "MDH":
-                                        CopiarRecord(hojaMain, mdh, n, m);
+                                        Rutinas.CopiarRecord(hojaMain, mdh, n, m);
                                         m++;
                                         break;
                                     case "TIN":
-                                        CopiarRecord(hojaMain, tin, n, t);
+                                        Rutinas.CopiarRecord(hojaMain, tin, n, t);
                                         t++;
                                         break;
                                     case "LIKE":
-                                        CopiarRecord(hojaMain, like, n, l);
+                                        Rutinas.CopiarRecord(hojaMain, like, n, l);
                                         l++;
                                         break;
                                     case "ALMA BEAUTY":
-                                        CopiarRecord(hojaMain, alma, n, a);
+                                        Rutinas.CopiarRecord(hojaMain, alma, n, a);
                                         a++;
                                         break;
                                 }
@@ -184,11 +187,7 @@ namespace ModExcelApp
                             }
                         }
                     }
-
-
-
-
-
+                    
 
                     // Save the changes to the file
                     await Task.Run(() => package.Save());

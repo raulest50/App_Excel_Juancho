@@ -6,11 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using Avalonia.Media;
 
 namespace ModExcelApp
 {
     public static class Rutinas
     {
+
+        public static System.Drawing.Color title_bg = System.Drawing.Color.LightSteelBlue;
+        public static System.Drawing.Color regular_bg = System.Drawing.Color.LightGoldenrodYellow;
+
 
         public static void DeleteAllExceptDespacho(ExcelWorkbook workbook)
         {
@@ -87,20 +92,17 @@ namespace ModExcelApp
             hojaMain.Cells[3, 36].Copy(otherSheet.Cells[1, 13]); // CBM total
 
             // Copy only format
-            CopyCellFormatting(hojaMain.Cells[3, 30], otherSheet.Cells[1, 14]);
-            CopyCellFormatting(hojaMain.Cells[3, 30], otherSheet.Cells[1, 15]);
-            CopyCellFormatting(hojaMain.Cells[3, 30], otherSheet.Cells[1, 16]);
+            CopyCellFormatting(hojaMain.Cells[3, 30], otherSheet.Cells[1, 14], title_bg);
+            CopyCellFormatting(hojaMain.Cells[3, 30], otherSheet.Cells[1, 15], title_bg);
+            CopyCellFormatting(hojaMain.Cells[3, 30], otherSheet.Cells[1, 16], title_bg);
 
-            //hojaMain.Cells[3, 30].Copy(otherSheet.Cells[1, 14], ExcelCopyOption.CopyFormats);
-            //hojaMain.Cells[3, 30].Copy(otherSheet.Cells[1, 15], ExcelCopyOption.CopyFormats);
-            //hojaMain.Cells[3, 30].Copy(otherSheet.Cells[1, 16], ExcelCopyOption.CopyFormats);
 
             otherSheet.Cells[1, 14].Value = "COSTO";
             otherSheet.Cells[1, 15].Value = "SUGERIDO";
         }
 
 
-        public static void CopyCellFormatting(ExcelRange sourceCell, ExcelRange targetCell)
+        public static void CopyCellFormatting(ExcelRange sourceCell, ExcelRange targetCell, System.Drawing.Color bg_color)
         {
             targetCell.Style.Numberformat.Format = sourceCell.Style.Numberformat.Format;
             targetCell.Style.Font.Name = sourceCell.Style.Font.Name;
@@ -109,10 +111,7 @@ namespace ModExcelApp
             targetCell.Style.Font.Italic = sourceCell.Style.Font.Italic;
             targetCell.Style.Font.UnderLine = sourceCell.Style.Font.UnderLine;
             targetCell.Style.Fill.PatternType = sourceCell.Style.Fill.PatternType;
-
-            Color bgcolor = ColorTranslator.FromHtml(sourceCell.Style.Fill.BackgroundColor.Rgb);
-            targetCell.Style.Fill.BackgroundColor.SetColor(bgcolor);
-
+            targetCell.Style.Fill.SetBackground(bg_color);
             targetCell.Style.Border.Left.Style = sourceCell.Style.Border.Left.Style;
             targetCell.Style.Border.Right.Style = sourceCell.Style.Border.Right.Style;
             targetCell.Style.Border.Top.Style = sourceCell.Style.Border.Top.Style;
@@ -163,6 +162,8 @@ namespace ModExcelApp
             dst_sheet.Cells[row_dst, 13].Value = hoja_main.Cells[row_orig, 36].Value;
         }
 
+
+
         public static void CopyCell(ExcelWorksheet srcSheet, ExcelWorksheet dstSheet, int srcRow, int srcCol, int dstRow, int dstCol)
         {
             var srcCell = srcSheet.Cells[srcRow, srcCol];
@@ -181,12 +182,51 @@ namespace ModExcelApp
                     dstCell.RichText[dstCell.RichText.Count - 1].Color = rt.Color;
                     dstCell.RichText[dstCell.RichText.Count - 1].FontName = rt.FontName;
                     dstCell.RichText[dstCell.RichText.Count - 1].Size = rt.Size;
-                    dstCell.RichText[dstCell.RichText.Count - 1].Underline = rt.Underline;
+                    //dstCell.RichText[dstCell.RichText.Count - 1].Underline = rt.Underline;
                 }
             }
         }
 
+        public static int CountMergedCells(ExcelWorksheet ws, int row, int column)
+        {
+            var cell = ws.Cells[row, column];
 
+            if (cell.Merge)
+            {
+                var mergedRange = ws.MergedCells.FirstOrDefault(range => ws.Cells[range].Any(c => c.Start.Row == row && c.Start.Column == column));
+                if (mergedRange != null)
+                {
+                    var range = ws.Cells[mergedRange];
+                    return range.Count();
+                }
+            }
+
+            return 1;
+        }
+        
+        public static void MergeCellsInColumnA(int startRow, int endRow, ExcelWorksheet ws)
+        {
+            // Check if the startRow is less than or equal to endRow
+            if (startRow <= endRow)
+            {
+                // Specify the range to merge in column A (column 1) from startRow to endRow
+                var startCell = ws.Cells[startRow, 1];
+                var endCell = ws.Cells[endRow, 1];
+                ws.Cells[startRow, 1, endRow, 1].Merge = true;
+            }
+            else
+            {
+                // Display a message if startRow is greater than endRow
+                Console.WriteLine("The start row must be less than or equal to the end row.");
+            }
+        }
+
+
+        public static bool IsCellEmpty(ExcelRange cell)
+        {
+            // Check if the cell's value is null or an empty string
+            return cell.Value == null || string.IsNullOrEmpty(cell.Text);
+        }
 
     }
 
