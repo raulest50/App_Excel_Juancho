@@ -11,6 +11,9 @@ using Avalonia.Threading;
 using OfficeOpenXml.Style;
 using System.Drawing;
 
+using System.Diagnostics;
+using OfficeOpenXml.Drawing;
+
 namespace ModExcelApp
 {
 
@@ -50,6 +53,35 @@ namespace ModExcelApp
         {
             string fpath = tb_file_path.Text;
             await ProcesarExcel(fpath);
+        }
+
+        private async void Test(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            string fpath = tb_file_path.Text;
+
+            try
+            {
+                using (var package = new ExcelPackage(new FileInfo(fpath)))
+                {
+                    ExcelWorkbook wb = package.Workbook;
+                    ExcelWorksheet hojaMain = wb.Worksheets["Despacho"];
+
+                    var pics = hojaMain.Drawings.Where(x => x.DrawingType == eDrawingType.Picture).Select(x => x.As.Picture);
+
+                    Debug.WriteLine("Test Output");
+
+                    var pic = pics.ElementAtOrDefault(3);
+
+                    Debug.WriteLine($"name: {pic.Name}");
+                    Debug.WriteLine($"tipo: {pic.Image.Type}");
+                    Debug.WriteLine($"image bounds: {pic.Image.Bounds.Width}" );
+                    Debug.WriteLine($" pic position:  {pic.Border.ToString()} ");
+
+                }
+            } catch(Exception ex)
+            {
+
+            }
         }
 
         private async void HandlerBrowse(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

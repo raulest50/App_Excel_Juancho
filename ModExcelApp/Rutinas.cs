@@ -118,7 +118,6 @@ namespace ModExcelApp
         }
 
 
-
         public static void CopiarRecord(ExcelWorksheet hoja_main, ExcelWorksheet dst_sheet, int row_orig, int row_dst)
         {
             // Set row height
@@ -128,11 +127,11 @@ namespace ModExcelApp
             CopyCell(hoja_main, dst_sheet, row_orig, 1, row_dst, 1);
 
             // Copy fotos
-            CopyImage(hoja_main, row_orig, 3, dst_sheet, row_dst, 2);
-            CopyImage(hoja_main, row_orig, 4, dst_sheet, row_dst, 3);
-            CopyImage(hoja_main, row_orig, 5, dst_sheet, row_dst, 4);
-            CopyImage(hoja_main, row_orig, 6, dst_sheet, row_dst, 5);
-            CopyImage(hoja_main, row_orig, 7, dst_sheet, row_dst, 6);
+            //CopyImage(hoja_main, row_orig, 3, dst_sheet, row_dst, 2);
+            //CopyImage(hoja_main, row_orig, 4, dst_sheet, row_dst, 3);
+            //CopyImage(hoja_main, row_orig, 5, dst_sheet, row_dst, 4);
+            //CopyImage(hoja_main, row_orig, 6, dst_sheet, row_dst, 5);
+            //CopyImage(hoja_main, row_orig, 7, dst_sheet, row_dst, 6);
 
             //CopyCell(hoja_main, dst_sheet, row_orig, 3, row_dst, 2); // foto1
             //CopyCell(hoja_main, dst_sheet, row_orig, 4, row_dst, 3);
@@ -164,7 +163,6 @@ namespace ModExcelApp
             CopyCell(hoja_main, dst_sheet, row_orig, 36, row_dst, 13);
             dst_sheet.Cells[row_dst, 13].Value = hoja_main.Cells[row_orig, 36].Value;
         }
-
 
 
         public static void CopyCell(ExcelWorksheet srcSheet, ExcelWorksheet dstSheet, int srcRow, int srcCol, int dstRow, int dstCol)
@@ -232,25 +230,6 @@ namespace ModExcelApp
         }
 
 
-        public static void CopyImage(ExcelWorksheet srcSheet, int srcRow, int srcCol, ExcelWorksheet dstSheet, int dstRow, int dstCol)
-        {
-            foreach (var pic in srcSheet.Drawings.OfType<ExcelPicture>())
-            {
-                if (pic.From.Row + 1 == srcRow && pic.From.Column + 1 == srcCol)
-                {
-                    using (var imageStream = new MemoryStream())
-                    {
-                        pic.Image.Save(imageStream, pic.Image.RawFormat);
-                        imageStream.Position = 0; // Reset the stream position to the beginning
-
-                        var newPic = dstSheet.Drawings.AddPicture(pic.Name, imageStream);
-                        newPic.SetPosition(dstRow - 1, pic.From.RowOff, dstCol - 1, pic.From.ColOff);
-                        newPic.SetSize(pic.Width, pic.Height);
-                    }
-                    break; // Assuming only one picture per cell
-                }
-            }
-        }
 
 
     }

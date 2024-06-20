@@ -113,6 +113,7 @@
 		</Grid>
 		<StackPanel HorizontalAlignment="Stretch">
 			<Button Content="Start" Width="100" HorizontalAlignment="Center" Click="HandlerStart" />
+			<Button Content="Test" Width="100" HorizontalAlignment="Center" Click="Test" />
 		</StackPanel>
 	</StackPanel>
 </Window>
